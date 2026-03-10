@@ -41,7 +41,7 @@ WORKDIR /var/www/html
 # Dependencias PHP (sin lock: composer install genera composer.lock desde composer.json)
 COPY composer.json ./
 RUN git config --global url."https://github.com/".insteadOf "git@github.com:"
-RUN composer install
+RUN composer install --no-scripts
 
 COPY . .
 
