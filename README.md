@@ -7,6 +7,20 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Social AI — Automatización de redes con IA
+
+Backend Laravel **multi-tenant** (varias empresas) para generar contenido con IA, programar y publicar en Instagram, Facebook, LinkedIn y Twitter. Integrable con **n8n**; una API key y el header `X-Company-Id` por request. Ver [docs/ARQUITECTURA_MULTI_TENANT.md](docs/ARQUITECTURA_MULTI_TENANT.md).
+
+- **Flujo 1:** Generar contenido (GET `/api/content-topics` → OpenAI → POST `/api/posts`).
+- **Flujo 2:** Publicar pendientes (GET `/api/posts/pending` → publicar en red → POST `/api/posts/{id}/published`).
+- **Flujo 3:** Responder comentarios (webhook → OpenAI → POST `/api/comments/{id}/reply`).
+
+Ver [docs/N8N_FLUJOS.md](docs/N8N_FLUJOS.md) para detalle de nodos y endpoints.
+
+Temas por defecto para Flujo 1: `php artisan db:seed --class=ContentTopicSeeder` (requiere tener companies en BD).
+
+---
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
