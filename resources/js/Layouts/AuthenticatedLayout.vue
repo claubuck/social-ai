@@ -39,6 +39,24 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    :href="route('generate-post.index')"
+                                    :active="route().current('generate-post.*')"
+                                >
+                                    Generar publicación
+                                </NavLink>
+                                <NavLink
+                                    :href="route('content-topics.index')"
+                                    :active="route().current('content-topics.*')"
+                                >
+                                    Temas de contenido
+                                </NavLink>
+                                <NavLink
+                                    :href="route('social-accounts.index')"
+                                    :active="route().current('social-accounts.*')"
+                                >
+                                    Cuentas sociales
+                                </NavLink>
                             </div>
                         </div>
 
@@ -145,6 +163,24 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('dashboard')"
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('generate-post.index')"
+                            :active="route().current('generate-post.*')"
+                        >
+                            Generar publicación
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('content-topics.index')"
+                            :active="route().current('content-topics.*')"
+                        >
+                            Temas de contenido
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('social-accounts.index')"
+                            :active="route().current('social-accounts.*')"
+                        >
+                            Cuentas sociales
                         </ResponsiveNavLink>
                     </div>
 

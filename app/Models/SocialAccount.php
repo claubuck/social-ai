@@ -37,6 +37,7 @@ class SocialAccount extends Model
         'platform',
         'account_name',
         'access_token',
+        'meta_user_token',
         'page_id',
     ];
 
@@ -47,7 +48,19 @@ class SocialAccount extends Model
      */
     protected $hidden = [
         'access_token',
+        'meta_user_token',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'access_token' => 'encrypted',
+            'meta_user_token' => 'encrypted',
+        ];
+    }
 
     /**
      * Get the company that owns the social account.

@@ -71,6 +71,14 @@ class Post extends Model
     }
 
     /**
+     * Get the comments on the post.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
      * Scope: posts that are scheduled and due for publishing.
      */
     public function scopeDueForPublishing($query)

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\SchedulePostRequest;
 use App\Http\Requests\Api\StorePostRequest;
+use App\Jobs\PublishPostJob;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,9 +19,18 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request): JsonResponse
     {
-        $companyId = $request->user()->company_id;
+        $companyId = $request->getCompanyId();
         if (! $companyId) {
-            return response()->json(['message' => 'User must belong to a company.'], 422);
+            return response()->json(['message' => 'Company required (X-Company-Id or user company).'], 422);
+        }
+
+        $publishImmediately = $request->boolean('publish_immediately');
+        $publishAt = $request->validated('publish_at');
+        $status = $request->validated('status', Post::STATUS_DRAFT);
+
+        if ($publishImmediately) {
+            $status = Post::STATUS_SCHEDULED;
+            $publishAt = $publishAt ?? now();
         }
 
         $post = Post::create([
@@ -28,9 +38,13 @@ class PostController extends Controller
             'platform' => $request->validated('platform'),
             'content' => $request->validated('content'),
             'image_url' => $request->validated('image_url'),
-            'publish_at' => $request->validated('publish_at'),
-            'status' => $request->validated('status', Post::STATUS_DRAFT),
+            'publish_at' => $publishAt,
+            'status' => $status,
         ]);
+
+        if ($publishImmediately) {
+            PublishPostJob::dispatch($post);
+        }
 
         return response()->json(['post' => $post], 201);
     }
@@ -42,13 +56,13 @@ class PostController extends Controller
      */
     public function schedule(SchedulePostRequest $request): JsonResponse
     {
-        $user = $request->user();
-        if (! $user->company_id) {
-            return response()->json(['message' => 'User must belong to a company.'], 422);
+        $companyId = $request->getCompanyId();
+        if (! $companyId) {
+            return response()->json(['message' => 'Company required (X-Company-Id or user company).'], 422);
         }
 
         $post = Post::where('id', $request->validated('post_id'))
-            ->where('company_id', $user->company_id)
+            ->where('company_id', $companyId)
             ->firstOrFail();
 
         $post->update([
@@ -66,7 +80,7 @@ class PostController extends Controller
      */
     public function pending(Request $request): JsonResponse
     {
-        $companyId = $request->user()->company_id;
+        $companyId = $request->getCompanyId();
         if (! $companyId) {
             return response()->json(['posts' => []]);
         }
@@ -86,8 +100,8 @@ class PostController extends Controller
      */
     public function markPublished(Request $request, Post $post): JsonResponse
     {
-        $user = $request->user();
-        if ($post->company_id !== $user->company_id) {
+        $companyId = $request->getCompanyId();
+        if ($companyId === null || $post->company_id !== $companyId) {
             return response()->json(['message' => 'Unauthorized.'], 403);
         }
 

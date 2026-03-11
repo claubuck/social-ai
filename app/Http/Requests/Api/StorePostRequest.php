@@ -30,6 +30,7 @@ class StorePostRequest extends FormRequest
             'image_url' => ['nullable', 'string', 'url'],
             'publish_at' => ['nullable', 'date'],
             'status' => ['nullable', 'string', Rule::in(Post::$statuses)],
+            'publish_immediately' => ['nullable', 'boolean'],
         ];
     }
 }

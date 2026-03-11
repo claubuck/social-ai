@@ -43,4 +43,12 @@ class Company extends Model
     {
         return $this->hasMany(Post::class);
     }
+
+    /**
+     * Get the content topics for AI/n8n flow.
+     */
+    public function contentTopics(): HasMany
+    {
+        return $this->hasMany(ContentTopic::class);
+    }
 }

@@ -39,4 +39,29 @@ return [
         'api_key' => env('OPENAI_API_KEY'),
     ],
 
+    /*
+    | Facebook / Meta OAuth (páginas e Instagram conectado).
+    | Crear app en https://developers.facebook.com/
+    | redirect_uri debe coincidir con la URL configurada en la app (ej. https://tuapp.com/facebook/callback).
+    */
+    'facebook' => [
+        'app_id' => env('FACEBOOK_APP_ID'),
+        'app_secret' => env('FACEBOOK_APP_SECRET'),
+        'redirect_uri' => env('APP_URL', 'http://localhost').'/facebook/callback',
+        'oauth_url' => 'https://www.facebook.com/v20.0/dialog/oauth',
+        'token_url' => 'https://graph.facebook.com/v20.0/oauth/access_token',
+        'graph_url' => 'https://graph.facebook.com/v20.0',
+    ],
+
+    /*
+    | API key para n8n/clientes externos (multi-tenant).
+    | Una sola clave; la empresa en cada request con header X-Company-Id.
+    | N8N_COMPANY_ID solo para un único tenant (opcional).
+    */
+    'n8n' => [
+        'api_key' => env('N8N_API_KEY'),
+        'company_id' => env('N8N_COMPANY_ID') ? (int) env('N8N_COMPANY_ID') : null,
+        'webhook_generate_url' => env('N8N_WEBHOOK_GENERATE_URL'),
+    ],
+
 ];
