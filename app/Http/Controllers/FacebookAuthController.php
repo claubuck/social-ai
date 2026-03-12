@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Log;
  */
 class FacebookAuthController extends Controller
 {
-    private const FB_SCOPE = 'pages_manage_posts,pages_read_engagement,instagram_basic,instagram_content_publish';
+    // Solo permisos de páginas; el token de página sirve también para Instagram si la cuenta está vinculada.
+    private const FB_SCOPE = 'pages_manage_posts,pages_read_engagement,pages_show_list';
 
     /**
      * Redirige al usuario a Facebook para autorizar la app.
